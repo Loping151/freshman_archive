@@ -34,7 +34,7 @@ def sinbeta(theta):
 
 
 def cosbeta(theta):
-    return (d+Re*cos(theta)-r)/sqrt(Re**2+d**2-2*Re*d*cos(theta))
+    return (d-Re*cos(theta))/sqrt(Re**2+d**2-2*Re*d*cos(theta))
 
 
 # 我的惯性力
@@ -91,7 +91,7 @@ def decomposition():
     myFi, Fg = myFine(p[0], p[1]), myFgra(p[0], p[1])
     m1Fi = p[0]*omiga**2*Re
     print(
-        "\tmy inertial force = {:.4} N\n\tm1 inertial force = {:.4} N\n\tmy gravity = {:.4} N".format(myFi, m1Fi, Fg))
+        "\tmy inertial force = {:.4} N\n\tm1 inertial force = {:.4} N\n\tmy gravity = {:.4} N".format(myFi, m1Fi, Fg), end='\n\n')
 
 
 # 输出表1中数据
@@ -101,7 +101,41 @@ for i in range(5):
     calculate()
 
 
+# 输出表2中数据
 for i in range(5):
     p = [1, i*pi/4]
     print("For point ", i+1, ":", sep='')
     decomposition()
+
+
+# 计算公式19
+print("tidal force (sun):", 3*G*1*Ms*Re/D**3, end='\n\n')
+
+
+# 缺陷分析建立的模型3
+def method3(m, theta):
+    Fx = myFgra(m, theta)*cosbeta(theta)-G*Mm*m/d**2
+    Fy = -myFgra(m, theta)*sinbeta(theta)
+    return Fx, Fy
+
+
+# 模型2和3数据比较
+def compare():
+    print("\tmass = {} kg, theta = {} pi rad".format(p[0], p[1]/pi))
+    m2Fx, m2Fy = method2(p[0], p[1])
+    m3Fx, m3Fy = method3(p[0], p[1])
+    m2F = sqrt(m2Fx**2+m2Fy**2)
+    m3F = sqrt(m3Fx**2+m3Fy**2)
+    print("\tm2F = {:.4} N, m3F = {:.4} N, error rate = {:.4}%".format(
+        m2F, m3F, abs(100*(m2F - m3F)/m3F)), end='\n\n')
+
+
+# 检验数据
+for i in range(5):
+    p = [1, i*pi/4]
+    print("For point ", i+1, ":", sep='')
+    compare()
+
+
+# 计算公式21
+print("tidal height:{:.4}".format(3*Mm*Re**4/2/Me/d**3))
