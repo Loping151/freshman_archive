@@ -23,7 +23,7 @@ def my_controller(observation, action_space, is_act_continuous=False):
         return [[0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]]
     myself = observation['chess_player_idx']
     if myself == 2:  # normalize, I'm 1 and opponent is 2
-        board_switch(c_map)
+        c_map = board_switch(c_map)
     solution = decision(c_map)
     agent_action = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
     agent_action[0][solution[0]] = 1
@@ -107,14 +107,15 @@ def scan_v2(c_map, mode=1, add=True):
 
 # best position
 def decision(c_map):
-    return search(c_map, depth=3)
+    return search(c_map,
+                  depth=4)  # you can change depth here. depth is round, not step. n depth sees 2n+1 steps in the future
 
 
-def search(c_map, depth=2):
+def search(c_map, depth=3):
     c_map, score = _search([[c_map, [None]]], init=True)
     act = np.argmax(score)
     for _ in range(depth):
-        c_map = update_op(c_map)
+        c_map = update_op(c_map)  # This is optional, choose only max score for opponent.
         c_map = _search(c_map)
     m_s = 0
     best_a = 0
