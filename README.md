@@ -3,6 +3,7 @@
 Also include data structure code. 
 
 Example Project:
+
 LoGobang151:
 ![image](https://github.com/Loping151/freshman_archive/assets/97866915/6f8ca0c3-b740-4fbe-bc7b-0fe47eb70ca3)
 
